@@ -3,6 +3,7 @@ package com.example.exammanagement.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,14 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String description;
     
+    @Size(max = 10, message = "Course code cannot exceed 10 characters")
+    @Column(name = "course_code", unique = true)
+    private String code;
+    
+    @Positive(message = "Credits must be positive")
+    @Column(nullable = false)
+    private Integer credits = 3; // Default to 3 credits
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
     private User faculty;
@@ -37,9 +46,11 @@ public class Course {
     // Constructors
     public Course() {}
     
-    public Course(String name, String description, User faculty) {
+    public Course(String name, String description, String code, Integer credits, User faculty) {
         this.name = name;
         this.description = description;
+        this.code = code;
+        this.credits = credits;
         this.faculty = faculty;
     }
     
@@ -66,6 +77,22 @@ public class Course {
     
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getCode() {
+        return code;
+    }
+    
+    public void setCode(String code) {
+        this.code = code;
+    }
+    
+    public Integer getCredits() {
+        return credits;
+    }
+    
+    public void setCredits(Integer credits) {
+        this.credits = credits;
     }
     
     public User getFaculty() {

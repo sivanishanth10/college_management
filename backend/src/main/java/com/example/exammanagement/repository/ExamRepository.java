@@ -17,7 +17,7 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     
     List<Exam> findByCourseId(Long courseId);
     
-    @Query("SELECT e FROM Exam e WHERE e.faculty.id = :facultyId")
+    @Query("SELECT e FROM Exam e WHERE e.course.faculty.id = :facultyId")
     List<Exam> findByFacultyId(@Param("facultyId") Long facultyId);
     
     List<Exam> findByExamDateBetween(LocalDateTime startDate, LocalDateTime endDate);

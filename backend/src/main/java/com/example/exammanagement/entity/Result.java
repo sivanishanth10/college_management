@@ -3,6 +3,7 @@ package com.example.exammanagement.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,11 @@ public class Result {
     @Column(name = "marks_obtained", nullable = false)
     private Integer marksObtained;
     
+    @NotNull(message = "Total marks is required")
+    @Positive(message = "Total marks must be positive")
+    @Column(name = "total_marks", nullable = false)
+    private Integer totalMarks;
+    
     @Column(name = "submission_date")
     private LocalDateTime submissionDate;
     
@@ -47,8 +53,9 @@ public class Result {
         this.student = student;
         this.exam = exam;
         this.marksObtained = marksObtained;
+        this.totalMarks = exam.getTotalMarks();
         this.submissionDate = LocalDateTime.now();
-        this.grade = calculateGrade(marksObtained, exam.getTotalMarks());
+        this.grade = calculateGrade(marksObtained, this.totalMarks);
     }
     
     // Getters and Setters
@@ -74,6 +81,9 @@ public class Result {
     
     public void setExam(Exam exam) {
         this.exam = exam;
+        if (this.totalMarks == null && exam != null) {
+            this.totalMarks = exam.getTotalMarks();
+        }
     }
     
     public Integer getMarksObtained() {
@@ -82,8 +92,17 @@ public class Result {
     
     public void setMarksObtained(Integer marksObtained) {
         this.marksObtained = marksObtained;
-        if (this.exam != null) {
-            this.grade = calculateGrade(marksObtained, this.exam.getTotalMarks());
+        this.grade = calculateGrade(marksObtained, this.totalMarks);
+    }
+    
+    public Integer getTotalMarks() {
+        return totalMarks;
+    }
+    
+    public void setTotalMarks(Integer totalMarks) {
+        this.totalMarks = totalMarks;
+        if (this.marksObtained != null) {
+            this.grade = calculateGrade(this.marksObtained, totalMarks);
         }
     }
     
@@ -130,9 +149,9 @@ public class Result {
     }
     
     public double getPercentage() {
-        if (marksObtained == null || exam == null || exam.getTotalMarks() == null || exam.getTotalMarks() == 0) {
+        if (marksObtained == null || totalMarks == null || totalMarks == 0) {
             return 0.0;
         }
-        return (double) marksObtained / exam.getTotalMarks() * 100;
+        return (double) marksObtained / totalMarks * 100;
     }
 }

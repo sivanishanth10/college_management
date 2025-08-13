@@ -1,7 +1,6 @@
 package com.example.exammanagement.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public class AuthRequest {
     
@@ -11,16 +10,12 @@ public class AuthRequest {
     @NotBlank(message = "Password is required")
     private String password;
     
-    @NotNull(message = "Role is required")
-    private String role;
-    
     // Constructors
     public AuthRequest() {}
     
-    public AuthRequest(String username, String password, String role) {
+    public AuthRequest(String username, String password) {
         this.username = username;
         this.password = password;
-        this.role = role;
     }
     
     // Getters and Setters
@@ -38,13 +33,5 @@ public class AuthRequest {
     
     public void setPassword(String password) {
         this.password = password;
-    }
-    
-    public String getRole() {
-        return role;
-    }
-    
-    public void setRole(String role) {
-        this.role = role;
     }
 }
